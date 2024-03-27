@@ -68,7 +68,8 @@ options:
 This .yaml file corresponds with the payload json required by `https://docs.salad.com/reference/create_container_group` EXCEPT the storage_amount, which we already multiply by 1073741824.
 
 EXAMPLE FILE:
-salad_config.yaml```
+salad_config.yaml
+```yaml
 container:
   resources:
     cpu: 4
