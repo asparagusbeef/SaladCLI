@@ -2,9 +2,9 @@
 
 ### Installation
 This does NOT compile anything. Its just a raw python script that interacts with the API and uses argparse for ease of use.
+It is Written on Python 3.11.5 with `pip install PyYAML==6.0.1 requests==2.31.0`. Not tested on any other version, but will probably work on many versions.
 
-To install with windows, clone this repo to `C:\ProgramData\`, and add `C:\ProgramData\SaladCLI\bin\` to your system PATH variable.
-written on Python 3.11.5 with `pip install PyYAML==6.0.1 requests==2.31.0`. Not tested on any other version, but will probably work on many versions.
+To install with Windows, clone this repo to `C:\ProgramData\`, and add `C:\ProgramData\SaladCLI\bin\` to your system PATH variable.
 
 If you prefer to not install packages system-wide, use a virtual environment and modify `salad.bat` to `@path\to\python C:\ProgramData\SaladCLI\src\salad.py %*`
 
