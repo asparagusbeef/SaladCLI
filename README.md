@@ -2,7 +2,7 @@
 
 ### Installation
 This does NOT compile anything. Its just a raw python script that interacts with the API and uses argparse for ease of use.
-It is Written on Python 3.11.5 with `pip install PyYAML==6.0.1 requests==2.31.0`. Not tested on any other version, but will probably work on many versions.
+It is written with Python 3.11.5. Requires `pip install PyYAML==6.0.1 requests==2.31.0`. Not tested on any other version, but will probably work on many versions.
 
 To install with Windows, clone this repo to `C:\ProgramData\`, and add `C:\ProgramData\SaladCLI\bin\` to your system PATH variable.
 
