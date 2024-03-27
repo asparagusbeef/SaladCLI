@@ -22,7 +22,7 @@ python3 /opt/SaladCLI/src/salad.py "$@"
 
 If you prefer to not install packages system-wide, use a virtual environment and modify `salad.bat` to use your python exe.
 
-Rename `salad.bat` to `salad` and move it to a location in your PATH, such as `/usr/local/bin/`
+Rename `salad.bat` to `salad` and move it to a location in your PATH, such as `/usr/local/bin/`: 
 `sudo mv /opt/SaladCLI/bin/salad.bat /usr/local/bin/salad`
 
 Make the script executable:
