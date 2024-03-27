@@ -32,7 +32,7 @@ Make the script executable:
 1. `salad login` to login to your account with an API key. It saves your credentials in `~/.salad/config`
 2. `salad setup` to setup organization and project. It saves your credentials in `~/.salad/config`
 3. `salad get quotas` to get organization quotas.
-4. `salad list gpus` to get gpus and their IDs. required to creating container groups.
+4. `salad list gpus` to get gpus and their IDs. required for creating container groups.
 5. `salad cgroup -h` help on all of the container group operations.
 ```
 usage: salad cgroup [-h] {list,create,get,update,delete,start,restart,stop,errors} ...
@@ -65,7 +65,7 @@ options:
   -h, --help            show this help message and exit
 ```
 8. `salad cgroup create` uses a .yaml file with keyword `--file/-f`
-This .yaml file corresponds with the payload json required by `https://docs.salad.com/reference/create_container_group` EXCEPT the storage_amount, which we already multiply by 1073741824.
+This .yaml file corresponds with the payload json required by https://docs.salad.com/reference/create_container_group EXCEPT the storage_amount, which we already multiply by 1073741824.
 
 EXAMPLE FILE:
 salad_config.yaml
