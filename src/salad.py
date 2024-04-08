@@ -66,8 +66,7 @@ def setup_cli():
 
 	cgroup_update_parser = cgroup_subparsers.add_parser('update', help='Update container group')
 	cgroup_update_parser.add_argument('--name', '-n', help='Name of container group', required=True)
-	cgroup_update_parser.add_argument('--display_name', '-d', help='Display name of container group')
-	cgroup_update_parser.add_argument('--replicas', '-r', help='Number of replicas')
+	cgroup_update_parser.add_argument('--file', '-f', help='YAML file containing container group configuration', required=True)
 
 	cgroup_delete_parser = cgroup_subparsers.add_parser('delete', help='Delete container group')
 	cgroup_delete_parser.add_argument('--name', '-n', help='Name of container group', required=True)
@@ -165,11 +164,9 @@ def main():
 			elif args.cgroup_command == 'get':
 				pretty_print(get_cgroup(args.name))
 			elif args.cgroup_command == 'update':
-				config = {}
-				if args.display_name:
-					config['display_name'] = args.display_name
-				if args.replicas:
-					config['replicas'] = args.replicas
+				config = load_yaml_file(args.file)
+				if config.get('container', {}).get('resources', {}).get('storage_amount'):
+					config['container']['resources']['storage_amount'] = config['container']['resources']['storage_amount'] * 1024 * 1024 * 1024
 				pretty_print(update_cgroup(args.name, config))
 			elif args.cgroup_command == 'delete':
 				pretty_print(delete_cgroup(args.name))

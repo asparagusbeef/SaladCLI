@@ -1,7 +1,7 @@
 import requests
 import os
 from pathlib import Path
-import json
+from json import dumps
 
 def _read_config():
 	config = {}
@@ -73,6 +73,9 @@ def list_cgroups():
 from pydantic import BaseModel, Field, UUID4, validator, ValidationError
 from typing import Literal
 
+'''
+COMMENTED OUT BECAUSE SALAD ALWAYS UPDATES THEIR API AND I DON'T WANT TO KEEP UP WITH IT
+
 class TagsModel(BaseModel):
 	name: str
 	value: str
@@ -135,6 +138,9 @@ class NetworkingModel(BaseModel):
 	port: int = Field(..., gt=0, le=65535)
 	auth: bool
 
+class NetworkingUpdateModel(BaseModel):
+	port: int | None = Field(None, gt=0, le=65535)
+
 class HTTPProbeModel(BaseModel):
 	path: str
 	port: int = Field(..., gt=0, le=65535)
@@ -165,7 +171,7 @@ class QueueConnectionModel(BaseModel):
 	port: int = Field(..., gt=0, le=65535)
 	queue_name: str
 
-class CGroupInfoModel(BaseModel):
+class ContainerCreateModel(BaseModel):
 	image: str
 	resources: CGroupResourcesModel
 	command: list[str] | None = None
@@ -176,7 +182,7 @@ class CGroupInfoModel(BaseModel):
 class CGroupModel(BaseModel):
 	name: str = Field(..., min_length=2, max_length=63, pattern=r'^[a-z][a-z0-9-]{0,61}[a-z0-9]$')
 	display_name: str | None = Field(None, min_length=2, max_length=63, pattern=r'^[ ,-.0-9A-Za-z]+$')
-	container: CGroupInfoModel
+	container: ContainerCreateModel
 	autostart_policy: bool
 	restart_policy: Literal['always', 'on_failure', 'never']
 	replicas: int = Field(..., gt=0, le=250)
@@ -187,7 +193,26 @@ class CGroupModel(BaseModel):
 	startup_probe: ProbeModel | None = None
 	queue_connection: QueueConnectionModel | None = None
 
-def create_cgroup(payload):
+class ContainerUpdateModel(BaseModel):
+	image: str | None = None
+	resources: CGroupResourcesModel | None = None
+	command: list[str] | None = None
+	environment_variables : dict[str, str] | None = None
+	logging: dict[Literal['datadog', 'new_relic', 'splunk', 'tcp', 'http'], DataDogLogModel | NewRelicLogModel | SplunkLogModel | TCPLogModel | HTTPLogModel] | None = None
+	registry_authentication: dict[Literal['basic', 'gcp_gcr', 'aws_ecr', 'docker_hub'], RegistryBasicAuthModel | RegistryGCPGCRModel | RegistryAWSECRModel | RegistryDockerHubModel] | None = None
+
+class CGroupUpdateModel(BaseModel):
+	display_name: str | None = Field(None, min_length=2, max_length=63, pattern=r'^[ ,-.0-9A-Za-z]+$')
+	container: ContainerUpdateModel | None = None
+	replicas: int | None = Field(None, gt=0, le=250)
+	country_codes: list[str] | None = None
+	networking: NetworkingUpdateModel | None = None
+	liveness_probe: ProbeModel | None = None
+	readiness_probe: ProbeModel | None = None
+	startup_probe: ProbeModel | None = None'''
+
+def create_cgroup(payload: dict):
+
 	headers, containers_url = _get_headers_and_cgroups_url()
 	response = requests.post(containers_url, headers=headers, json=payload)
 	try: return response.json()
@@ -204,14 +229,18 @@ def get_cgroup(container_group_name: str):
 
 # update container group
 
-class UpdateContainerModel(BaseModel):
-	display_name: str | None = Field(None, min_length=2, max_length=63, pattern=r'^[ ,-.0-9A-Za-z]+$')
-	replicas: int | None = Field(None, gt=0, le=250)
+def update_cgroup(container_group_name: str, payload: dict):
 
-def update_cgroup(container_group_name: str, payload: UpdateContainerModel):
 	headers, containers_url = _get_headers_and_cgroups_url()
+	headers["accept"] = "application/merge-patch+json"
+	headers["content-type"] = "application/merge-patch+json"
 
-	response = requests.patch(f"{containers_url}/{container_group_name}", headers=headers, json=payload.model_dump(exclude_none=True))
+	response = requests.patch(
+		f"{containers_url}/{container_group_name}", 
+		headers=headers, 
+		data=dumps(payload),
+	)
+	print("response status")
 	try: return response.json()
 	except: return response.text
 

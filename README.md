@@ -64,7 +64,28 @@ positional arguments:
 options:
   -h, --help            show this help message and exit
 ```
-8. `salad cgroup create` uses a .yaml file with keyword `--file/-f`
+8. `salad cgroup update` uses a .yaml file with keyword `--file/-f`
+This .yaml file corresponds with the payload json allowed in https://docs.salad.com/reference/update_container_group EXCEPT the storage_amount, which we already multiply by 1073741824.
+
+EXAMPLE FILE:
+`salad_update_config.yaml`
+```yaml
+container:
+  resources:
+    cpu: 2
+    storage_amount: 5
+  registry_authentication:
+    basic:
+      username: docker_username
+      password: docker_password
+  image: user/img:tag
+  command:
+  - test_startup.py
+  - test_readiness.py
+display_name: newDisplayName
+```
+
+9. `salad cgroup create` uses a .yaml file with keyword `--file/-f`
 This .yaml file corresponds with the payload json required by https://docs.salad.com/reference/create_container_group EXCEPT the storage_amount, which we already multiply by 1073741824.
 
 EXAMPLE FILE:
