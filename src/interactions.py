@@ -240,7 +240,6 @@ def update_cgroup(container_group_name: str, payload: dict):
 		headers=headers, 
 		data=dumps(payload),
 	)
-	print("response status")
 	try: return response.json()
 	except: return response.text
 
